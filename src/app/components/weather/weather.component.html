@@ -1,0 +1,68 @@
+<div class="weather-container container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Warp Simple Weather App</h2>
+
+          <form [formGroup]="weatherForm" (ngSubmit)="onSubmit()">
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter city name"
+                formControlName="city"
+                [class.is-invalid]="
+                  weatherForm.get('city')?.invalid && weatherForm.get('city')?.touched
+                "
+              />
+              <button
+                class="btn btn-primary mx-3"
+                type="submit"
+                [disabled]="weatherForm.invalid || loading()"
+              >
+                {{ loading() ? 'Searching...' : 'Search' }}
+              </button>
+            </div>
+            <div
+              *ngIf="weatherForm.get('city')?.invalid && weatherForm.get('city')?.touched"
+              class="text-danger small mb-2"
+            >
+              Please enter a valid city name.
+            </div>
+          </form>
+
+          <!-- Loading Spinner -->
+          <div *ngIf="loading()" class="text-center my-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Fetching weather data...</p>
+          </div>
+
+          <div *ngIf="error()" class="alert alert-danger" role="alert">
+            {{ error() }}
+          </div>
+
+          <div *ngIf="weather() as w" class="weather-result text-center mt-4 p-3 bg-light rounded">
+            <h3 class="mb-0">{{ w.city }}</h3>
+            <div class="d-flex justify-content-center align-items-center my-3">
+              <img
+                [src]="w.icon"
+                [alt]="w.description"
+                class="weather-icon"
+                width="100"
+                height="100"
+              />
+              <div class="temp-display ms-3">
+                <h1 class="display-4 fw-bold mb-0">{{ w.temp | number: '1.0-0' }}°C</h1>
+                <p class="lead mb-0 fw-medium">{{ w.condition }}</p>
+                <p class="text-muted text-capitalize mb-0">{{ w.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
